@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define FIO                           \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(0);                       \
+    cout.tie(0);
+#define pb push_back
+// right top left bottom
+ll dx[4] = {0, -1, 0, 1};
+ll dy[4] = {1, 0, -1, 0};
+
+int n;
+int ans[105];
+int a[105];
+int ind[105];
+const int INF = 1e9 + 5;
+
+void recurse(int si, int val, int ei, int cnt)
+{
+    // storing the height of depth
+    ans[val] = cnt;
+
+    // Base case
+    if (si == ei || si > ei)
+        return;
+
+    int mx = 0;
+    for (int i = si; i < ind[val]; i++)
+    {
+        mx = max(mx, a[i]);
+    }
+
+    // left calls
+    recurse(si, mx, ind[val] - 1, cnt + 1);
+
+    mx = 0;
+    for (int i = ind[val] + 1; i <= ei; i++)
+        mx = max(mx, a[i]);
+    // right calls
+    recurse(ind[val] + 1, mx, ei, cnt + 1);
+}
+
+void solve()
+{
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+        ind[a[i]] = i;
+    }
+
+    memset(ans, -1, sizeof(ans));
+
+    // si , max-val , ei , cnt
+    recurse(0, n, n - 1, 0);
+
+    for (int i = 0; i < n; i++)
+        cout << ans[a[i]] << " ";
+    cout << endl;
+}
+
+int main()
+{
+    FIO;
+    ll test = 1;
+    cin >> test;
+    while (test--)
+    {
+        solve();
+    }
+}
